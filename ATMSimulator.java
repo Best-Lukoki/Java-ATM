@@ -6,6 +6,9 @@ public class ATMSimulator {
     
     private String name;
     private double balance;
+    private String [] accountnames = new String[1000];
+    private double [] accountbalances = new double[1000];
+    int counter = 0;
 
     public ATMSimulator (String name) {
         this.name = name;
@@ -27,6 +30,11 @@ public class ATMSimulator {
 
     double getBalance () {
         return balance;
+    }
+
+    public void addDetails () {
+        accountnames[counter] = getName();
+        accountbalances[counter] = getBalance();
     }
 
     public static String inputString (String message) {
@@ -66,7 +74,7 @@ public class ATMSimulator {
 
     public void deposit () {
         
-        System.out.println("Current balance: " + getBalance());
+        System.out.println("Current balance: £" + accountbalances[counter]);
         double deposit = inputDouble("Enter the amount you want to deposit");
         
         double newbalance = getBalance() + deposit;
@@ -75,7 +83,7 @@ public class ATMSimulator {
 
     public void withdraw () {
 
-        System.out.println("Current balance: " + getBalance());
+        System.out.println("Current balance: £" + accountbalances[counter]);
         double withdraw = inputDouble("Enter the amount you want to withdraw");
 
         while (withdraw > getBalance()) {
@@ -88,9 +96,15 @@ public class ATMSimulator {
 
     public void simulation () {
         System.out.println(getName() + ", Welcome to the Bank");
-        double start = inputDouble("Enter how much money you'd like to start off with");
+        double start = inputDouble("Enter your starting amount to set up your account");
+
+        while (start <= 0) {
+            start = inputDouble("Please input a number above 0");
+        }
 
         setBalance(start);
+
+        addDetails();
 
         boolean finished = true;
 
@@ -109,6 +123,8 @@ public class ATMSimulator {
             else if (choice == 3) {
                 finished = false;
             }
+
+            addDetails();
         }
         System.out.println("Thank you for banking with us!");
     }
