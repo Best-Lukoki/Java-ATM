@@ -9,34 +9,10 @@ public class ATMSimulator {
     private String [] accountnames = new String[1000];
     private double [] accountbalances = new double[1000];
     int counter = 0;
+    int positionindex = 0;
 
-    public ATMSimulator (String name) {
-        this.name = name;
-        balance = 0;
-    }
 
-    public void setName (String n) {
-        name = n;
-    }
-
-    String getName () {
-        return name;
-    }
-
-    public void setBalance (double b) {
-        balance = b;
-        System.out.println(getName() + ", you now have £" + getBalance());
-    }
-
-    double getBalance () {
-        return balance;
-    }
-
-    public void addDetails () {
-        accountnames[counter] = getName();
-        accountbalances[counter] = getBalance();
-    }
-
+    // method allows user to input a string value, returning the string value inputted by the user
     public static String inputString (String message) {
 
         Scanner scanner = new Scanner(System.in);
@@ -46,6 +22,7 @@ public class ATMSimulator {
         return answer;
     }
 
+    // method allows user to input a double value, returning the double value inputted by the user
     public static double inputDouble (String message) {
 
         Scanner scanner = new Scanner(System.in);
@@ -56,6 +33,7 @@ public class ATMSimulator {
 
     }
 
+    // method allows user to input an integer value, returning the integer value inputted by the user
     public static int  inputInt (String message) {
 
         Scanner scanner = new Scanner(System.in);
@@ -66,47 +44,106 @@ public class ATMSimulator {
 
     }
 
-    public void inputName () {
+    // constructor method containing the name and sets the balance equal to 0
+    public ATMSimulator (String name) {
+        this.name = name;
+        balance = 0;
+    }
 
+    // mutator method that sets the name of the user
+    public void setName (String n) {
+        name = n;
+    }
+
+    // accessor method that obtains the name of the user
+    String getName () {
+        return name;
+    }
+
+    // mutator method that sets the balance of the user and then tells the user the current balance in its account
+    public void setBalance (double b) {
+        balance = b;
+        System.out.println(getName() + ", you now have £" + getBalance());
+    }
+
+    // accessor method that obtains the current balance of the user
+    double getBalance () {
+        return balance;
+    }
+
+    // this method updates the details of the user and inputs them into arrays, one for the names and one for the balance
+    // the positions are respective to a said user, for example, index 0 for both arrays is for one person, index 4 for both arrays would correspond
+    // to another user, so on and so forth
+    public void addDetails () {
+        accountnames[counter] = getName();
+        accountbalances[counter] = getBalance();
+    }
+
+    // this method searches through the accountnames array to find a user
+    // once found it will return the index value
+    public int findAccount (String n) {
+        for (int i = 0; i<accountnames.length; i++) {
+            if (accountnames[i].equals(n)) {
+                break; // exits the for loop once the user is found
+            }
+            positionindex++;
+        }
+        return positionindex;
+    }
+
+    // prompts the user to input their name, and then users the mutator method to set the name of the user
+    public void inputName () {
         String n = inputString("Enter your name");
         setName(n);
     }
 
+    // this method will allow the user to input money into the account, which will add on to any existing figures in the bank balance
+    // before setting the new balance
     public void deposit () {
-        
-        System.out.println("Current balance: £" + accountbalances[counter]);
+        System.out.println("Current balance: £" + accountbalances[positionindex]); // states currrent user's balance for reference
         double deposit = inputDouble("Enter the amount you want to deposit");
+
+        while (deposit <= 0) {
+            deposit = inputDouble("Enter a positive number that's above 0 when depositing money"); // prompts user to input a positive number
+        }
         
         double newbalance = getBalance() + deposit;
         setBalance(newbalance);
     }
 
-    public void withdraw () {
 
-        System.out.println("Current balance: £" + accountbalances[counter]);
+    // same as deposit method but instead of inputting money, it takes away money from the user's account and then sets the new balance afterwards
+    public void withdraw () {
+        System.out.println("Current balance: £" + accountbalances[positionindex]); // states current user's balance for reference
         double withdraw = inputDouble("Enter the amount you want to withdraw");
 
         while (withdraw > getBalance()) {
-            withdraw = inputDouble("Amount entered exceeds current balance, please try again");
+            withdraw = inputDouble("Amount entered exceeds current balance, please try again"); // prompts user to take away amount within the balance
         }
 
         double newbalance = getBalance() - withdraw;
         setBalance(newbalance);
     }
 
+    // this is the main method for the simulation, users former methods to form the bank simulator, starting by asking for the name and
+    // entering a starting amount to set up the account, then it will continuously ask the user to withdraw or deposit money unless they decide
+    // to exit the system
     public void simulation () {
-        System.out.println(getName() + ", Welcome to the Bank");
+        addDetails();
+        
+        System.out.println(accountnames[positionindex] + ", Welcome to the Bank");
         double start = inputDouble("Enter your starting amount to set up your account");
 
         while (start <= 0) {
-            start = inputDouble("Please input a number above 0");
+            start = inputDouble("Please input a number above 0"); // prompts user to input a number above 0
         }
 
         setBalance(start);
 
         addDetails();
+        
 
-        boolean finished = true;
+        boolean finished = true; // boolean variable used to indicate whether the user has or hasn't finished with their bank account
 
         while (finished) {
 
@@ -121,11 +158,19 @@ public class ATMSimulator {
             }
 
             else if (choice == 3) {
-                finished = false;
+                finished = false; // user chooses to exit so finished is now false, so the while loop can stop
             }
 
             addDetails();
         }
+
+        // work in progress
+        int addorexit = inputInt("Enter 1 if you are an existing user, enter 2 if you are a current user, enter 3 to exit the system");
+
+        if (addorexit == 1) {
+            // not finished yet
+        }
+
         System.out.println("Thank you for banking with us!");
     }
 }
