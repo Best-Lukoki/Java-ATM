@@ -10,6 +10,7 @@ public class ATMSimulator {
     private double [] accountbalances = new double[1000];
     int counter = 0;
     int positionindex = 0;
+    boolean finished = true;
 
 
     // method allows user to input a string value, returning the string value inputted by the user
@@ -125,6 +126,24 @@ public class ATMSimulator {
         setBalance(newbalance);
     }
 
+    public void userchoices () {
+        int choice = inputInt("Enter 1 to deposit, enter 2 to withdraw, enter 3 to exit");
+
+            if (choice == 1) {
+                deposit();
+            }
+
+            else if (choice == 2) {
+                withdraw();
+            }
+
+            else if (choice == 3) {
+                finished = false; // user chooses to exit so finished is now false, so the while loop can stop
+            }
+
+            addDetails();
+    }
+
     // this is the main method for the simulation, users former methods to form the bank simulator, starting by asking for the name and
     // entering a starting amount to set up the account, then it will continuously ask the user to withdraw or deposit money unless they decide
     // to exit the system
@@ -143,33 +162,18 @@ public class ATMSimulator {
         addDetails();
         
 
-        boolean finished = true; // boolean variable used to indicate whether the user has or hasn't finished with their bank account
+        finished = true; // boolean variable used to indicate whether the user has or hasn't finished with their bank account
 
         while (finished) {
-
-            int choice = inputInt("Enter 1 to deposit, enter 2 to withdraw, enter 3 to exit");
-
-            if (choice == 1) {
-                deposit();
-            }
-
-            else if (choice == 2) {
-                withdraw();
-            }
-
-            else if (choice == 3) {
-                finished = false; // user chooses to exit so finished is now false, so the while loop can stop
-            }
-
-            addDetails();
+            userchoices();
         }
 
         // work in progress
-        int addorexit = inputInt("Enter 1 if you are an existing user, enter 2 if you are a current user, enter 3 to exit the system");
+        /* int addorexit = inputInt("Enter 1 if you are an existing user, enter 2 if you are a current user, enter 3 to exit the system");
 
         if (addorexit == 1) {
             // not finished yet
-        }
+        } */
 
         System.out.println("Thank you for banking with us!");
     }
