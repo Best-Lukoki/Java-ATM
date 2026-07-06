@@ -10,6 +10,7 @@ public class ATMSimulator {
     private double [] accountbalances = new double[1000];   // array for all the balances for the accounts, in order with the names
     int positionindex = 0;  // helps find out the specific index of the users
     boolean finished = true; // used to check whether the user has finished with their transactions
+    boolean exitsystem = true; // used to check whether the whole system is done or not
 
 
     // method allows user to input a string value, returning the string value inputted by the user
@@ -83,8 +84,11 @@ public class ATMSimulator {
     // once found it will return the index value
     public int findAccount (String n) {
         for (int i = 0; i<accountnames.length; i++) {
-            if (accountnames[i].equals(n)) {
+            if (accountnames[i] == null) {
                 break; // exits the for loop once the user is found
+            }
+            if (accountnames[i].equals(n)) {
+                break;
             }
             positionindex++;
         }
@@ -167,24 +171,40 @@ public class ATMSimulator {
             userchoices();
         }
 
-        // work in progress 
+        // work in progress, doesn't properly work right now
 
-        /* int addorexit = inputInt("Enter 1 if you are a new user, enter 2 if you are an existing user, enter 3 to exit the system");
+        exitsystem = true;
 
-        if (addorexit == 1) {
-            // move to the next space in the array and do recursion on simulation method
-        }
+        while (exitsystem) {
+            
+            int addorexit = inputInt("Enter 1 if you are a new user, enter 2 if you are an existing user, enter 3 to exit the system");
+            
+            if (addorexit == 1) {
+                // move to the next space in the array and do recursion on simulation method
+                findAccount(null);
+                inputName();
+                simulation();
+            }
 
-        else if (addorexit == 2) {
+            else if (addorexit == 2) {
             // use findaccount method and do while loop on userchoices again
-            String n = inputString("Enter your name");
-            findAccount(n);
+
+                String n = inputString("Enter your name");
+                findAccount(n);
+                System.out.println("You currently have: £" + accountbalances[positionindex]);
+
+                finished = true;
+
+                while (finished) {
+                    userchoices();
+                }
+            }
+
+            else if (addorexit == 3) {
+                // exit whole system
+                exitsystem = false;
+            }
         }
-
-        else if (addorexit == 3) {
-            // exit whole system
-        } */
-
         System.out.println("Thank you for banking with us!");
     }
 }
