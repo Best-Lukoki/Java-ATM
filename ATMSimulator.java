@@ -6,8 +6,8 @@ public class ATMSimulator {
     
     private String name;
     private double balance;
-    private String [] accountnames = new String[3];      // array for all the names of the accounts
-    private double [] accountbalances = new double[3];   // array for all the balances for the accounts, in order with the names
+    private String [] accountnames = new String[100];      // array for all the names of the accounts
+    private double [] accountbalances = new double[100];   // array for all the balances for the accounts, in order with the names
     int positionindex;  // helps find out the specific index of the users
     boolean finished = true; // used to check whether the user has finished with their transactions
     boolean exitsystem = true; // used to check whether the whole system is done or not
@@ -82,18 +82,16 @@ public class ATMSimulator {
 
     // this method searches through the accountnames array to find a user
     // once found it will return the index value
-    void findAccount (String n) {
+    String findAccount (String n) {
         positionindex = 0;
 
         for (int i = 0; i<accountnames.length; i++) {
-            if (accountnames[i] == null) {
-                break; // exits the for loop once the user is found
-            }
-            else if (accountnames[i].equals(n)) {
-                break;
+            if (accountnames[i] == null || accountnames[i].equals(n)) {
+                return accountnames[i]; // exits the for loop once the user is found
             }
             positionindex++;
         }
+        return null;
     }
 
     // prompts the user to input their name, and then users the mutator method to set the name of the user
@@ -130,6 +128,7 @@ public class ATMSimulator {
         setBalance(newbalance);
     }
 
+    // this method gives the users the choice to either deposit or withdraw money, or exit their account
     public void userchoices () {
         int choice = inputInt("Enter 1 to deposit, enter 2 to withdraw, enter 3 to exit");
 
@@ -150,6 +149,7 @@ public class ATMSimulator {
     }
 
     // placeholder test method to see if i make any mistakes in regards to the information kept in the arrays
+    // it is dotted around randomly in some methods to help me track progress
     void arrays () {
         for (int i = 0; i<accountnames.length; i++) {
             if (accountnames[i] == null) {
@@ -184,8 +184,6 @@ public class ATMSimulator {
             userchoices();
         }
 
-        // work in progress, doesn't properly work right now
-
         exitsystem = true;
 
         while (exitsystem) {
@@ -205,7 +203,12 @@ public class ATMSimulator {
             // use findaccount method and do while loop on userchoices again
 
                 arrays();
-                String n = inputString("Enter your name");   // add a check through the array to see if user is in the system or not (later)
+                String n = inputString("Enter your name");
+
+                while (findAccount(n) == null) {
+                    n = inputString("Account not found, please try again"); // used to see if user inputs a wrong name in the system
+                }
+
                 findAccount(n);
                 arrays();
                 System.out.println("You currently have: £" + accountbalances[positionindex]);
@@ -226,6 +229,5 @@ public class ATMSimulator {
                 exitsystem = false;
             }
         }
-        System.out.println("Thank you for banking with us!");
     }
 }
