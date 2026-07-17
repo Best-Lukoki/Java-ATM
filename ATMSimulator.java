@@ -6,9 +6,9 @@ public class ATMSimulator {
     
     private String name;
     private double balance;
-    private String [] accountnames = new String[1000];      // array for all the names of the accounts
-    private double [] accountbalances = new double[1000];   // array for all the balances for the accounts, in order with the names
-    int positionindex = 0;  // helps find out the specific index of the users
+    private String [] accountnames = new String[3];      // array for all the names of the accounts
+    private double [] accountbalances = new double[3];   // array for all the balances for the accounts, in order with the names
+    int positionindex;  // helps find out the specific index of the users
     boolean finished = true; // used to check whether the user has finished with their transactions
     boolean exitsystem = true; // used to check whether the whole system is done or not
 
@@ -64,7 +64,7 @@ public class ATMSimulator {
     // mutator method that sets the balance of the user and then tells the user the current balance in its account
     public void setBalance (double b) {
         balance = b;
-        System.out.println(getName() + ", you now have £" + getBalance());
+        System.out.println(accountnames[positionindex] + ", you now have £" + getBalance());
     }
 
     // accessor method that obtains the current balance of the user
@@ -82,17 +82,18 @@ public class ATMSimulator {
 
     // this method searches through the accountnames array to find a user
     // once found it will return the index value
-    public int findAccount (String n) {
+    void findAccount (String n) {
+        positionindex = 0;
+
         for (int i = 0; i<accountnames.length; i++) {
             if (accountnames[i] == null) {
                 break; // exits the for loop once the user is found
             }
-            if (accountnames[i].equals(n)) {
+            else if (accountnames[i].equals(n)) {
                 break;
             }
             positionindex++;
         }
-        return positionindex;
     }
 
     // prompts the user to input their name, and then users the mutator method to set the name of the user
@@ -111,7 +112,7 @@ public class ATMSimulator {
             deposit = inputDouble("Enter a positive number that's above 0 when depositing money"); // prompts user to input a positive number
         }
         
-        double newbalance = getBalance() + deposit;
+        double newbalance = accountbalances[positionindex] + deposit;
         setBalance(newbalance);
     }
 
@@ -125,7 +126,7 @@ public class ATMSimulator {
             withdraw = inputDouble("Amount entered exceeds current balance, please try again"); // prompts user to take away amount within the balance
         }
 
-        double newbalance = getBalance() - withdraw;
+        double newbalance = accountbalances[positionindex] - withdraw;
         setBalance(newbalance);
     }
 
@@ -145,6 +146,17 @@ public class ATMSimulator {
             }
 
             addDetails();
+            arrays();
+    }
+
+    // placeholder test method to see if i make any mistakes in regards to the information kept in the arrays
+    void arrays () {
+        for (int i = 0; i<accountnames.length; i++) {
+            if (accountnames[i] == null) {
+                break;
+            }
+            System.out.println(accountnames[i] + " = " + accountbalances[i]);
+        }
     }
 
     // this is the main method for the simulation, users former methods to form the bank simulator, starting by asking for the name and
@@ -164,6 +176,7 @@ public class ATMSimulator {
 
         addDetails();
         
+        arrays();
 
         finished = true; // boolean variable used to indicate whether the user has or hasn't finished with their bank account
 
@@ -180,6 +193,8 @@ public class ATMSimulator {
             int addorexit = inputInt("Enter 1 if you are a new user, enter 2 if you are an existing user, enter 3 to exit the system");
             
             if (addorexit == 1) {
+
+                arrays();
                 // move to the next space in the array and do recursion on simulation method
                 findAccount(null);
                 inputName();
@@ -189,9 +204,13 @@ public class ATMSimulator {
             else if (addorexit == 2) {
             // use findaccount method and do while loop on userchoices again
 
-                String n = inputString("Enter your name");
+                arrays();
+                String n = inputString("Enter your name");   // add a check through the array to see if user is in the system or not (later)
                 findAccount(n);
+                setName(n);
+                arrays();
                 System.out.println("You currently have: £" + accountbalances[positionindex]);
+                arrays();
 
                 finished = true;
 
