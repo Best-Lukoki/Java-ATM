@@ -207,10 +207,12 @@ public class ATMSimulator {
                 arrays();
                 String n = inputString("Enter your name");   // add a check through the array to see if user is in the system or not (later)
                 findAccount(n);
-                setName(n);
                 arrays();
                 System.out.println("You currently have: £" + accountbalances[positionindex]);
                 arrays();
+
+                setName(n);
+                setBalance(accountbalances[positionindex]); 
 
                 finished = true;
 
