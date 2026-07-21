@@ -86,7 +86,7 @@ public class ATMSimulator {
         positionindex = 0;
 
         for (int i = 0; i<accountnames.length; i++) {
-            if (accountnames[i] == null || accountnames[i].equals(n)) {
+            if (accountnames[i] == null || accountnames[i].equalsIgnoreCase(n)) {
                 return accountnames[i]; // exits the for loop once the user is found
             }
             positionindex++;
@@ -145,7 +145,45 @@ public class ATMSimulator {
             }
 
             addDetails();
-            arrays();
+    }
+
+    public void neworexistinguser () {
+        int addorexit = inputInt("Enter 1 if you are a new user, enter 2 if you are an existing user, enter 3 to exit the system");
+            
+            if (addorexit == 1) {
+
+                // move to the next space in the array and do recursion on simulation method
+                findAccount(null);
+                inputName();
+                simulation();
+            }
+
+            else if (addorexit == 2) {
+            // use findaccount method and do while loop on userchoices again
+
+                String n = inputString("Enter your name");
+
+                while (findAccount(n) == null) {
+                    n = inputString("Account not found, please try again"); // used to see if user inputs a wrong name in the system
+                }
+
+                findAccount(n);
+                System.out.println("You currently have: £" + accountbalances[positionindex]);
+
+                setName(n);
+                setBalance(accountbalances[positionindex]); 
+
+                finished = true;
+
+                while (finished) {
+                    userchoices();
+                }
+            }
+
+            else if (addorexit == 3) {
+                // exit whole system
+                exitsystem = false;
+            }
     }
 
     // placeholder test method to see if i make any mistakes in regards to the information kept in the arrays
@@ -176,7 +214,6 @@ public class ATMSimulator {
 
         addDetails();
         
-        arrays();
 
         finished = true; // boolean variable used to indicate whether the user has or hasn't finished with their bank account
 
@@ -187,47 +224,7 @@ public class ATMSimulator {
         exitsystem = true;
 
         while (exitsystem) {
-            
-            int addorexit = inputInt("Enter 1 if you are a new user, enter 2 if you are an existing user, enter 3 to exit the system");
-            
-            if (addorexit == 1) {
-
-                arrays();
-                // move to the next space in the array and do recursion on simulation method
-                findAccount(null);
-                inputName();
-                simulation();
-            }
-
-            else if (addorexit == 2) {
-            // use findaccount method and do while loop on userchoices again
-
-                arrays();
-                String n = inputString("Enter your name");
-
-                while (findAccount(n) == null) {
-                    n = inputString("Account not found, please try again"); // used to see if user inputs a wrong name in the system
-                }
-
-                findAccount(n);
-                arrays();
-                System.out.println("You currently have: £" + accountbalances[positionindex]);
-                arrays();
-
-                setName(n);
-                setBalance(accountbalances[positionindex]); 
-
-                finished = true;
-
-                while (finished) {
-                    userchoices();
-                }
-            }
-
-            else if (addorexit == 3) {
-                // exit whole system
-                exitsystem = false;
-            }
+            neworexistinguser();
         }
     }
 }
